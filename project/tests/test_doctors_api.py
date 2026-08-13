@@ -1,0 +1,10 @@
+def test_create_and_get_doctor_api(client):
+    resp = client.post("/doctors", json={"name": "API Doc", "specialization": "ENT"})
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "id" in data
+    did = data["id"]
+
+    r2 = client.get(f"/doctors/{did}")
+    assert r2.status_code == 200
+    assert r2.json()["specialization"] == "ENT"
