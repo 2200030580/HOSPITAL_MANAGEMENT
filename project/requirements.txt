@@ -4,5 +4,7 @@ sqlalchemy
 alembic
 pydantic
 pytest
+pytest-cov
+httpx
 requests
 bandit
