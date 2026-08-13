@@ -9,6 +9,7 @@ description = "Hospital Appointment Management API"
 authors = [{name = "You"}]
 
 [tool.pytest.ini_options]
+pythonpath = ["."]
 addopts = "-q --cov=app --cov-report=term-missing"
 testpaths = ["tests"]
 
