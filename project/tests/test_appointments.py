@@ -29,10 +29,10 @@ def test_create_and_get_appointment(db_session):
     )
 
     created = create_appointment(db, payload)
-    assert created.patient_id == patient.id
-    assert created.doctor_id == doctor.id
+    assert created.patient_id == patient.id  # nosec B101
+    assert created.doctor_id == doctor.id  # nosec B101
 
     fetched = get_appointment(db, created.id)
-    assert fetched is not None
-    assert fetched.id == created.id
+    assert fetched is not None  # nosec B101
+    assert fetched.id == created.id  # nosec B101
     # db fixture handles closing

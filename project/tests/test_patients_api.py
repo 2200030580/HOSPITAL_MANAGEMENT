@@ -34,11 +34,11 @@ client = TestClient(app)
 
 def test_create_and_get_patient_api():
     resp = client.post("/patients", json={"name": "API User", "email": "api@example.com"})
-    assert resp.status_code == 200
+    assert resp.status_code == 200  # nosec B101
     data = resp.json()
-    assert "id" in data
+    assert "id" in data  # nosec B101
     pid = data["id"]
 
     r2 = client.get(f"/patients/{pid}")
-    assert r2.status_code == 200
-    assert r2.json()["email"] == "api@example.com"
+    assert r2.status_code == 200  # nosec B101
+    assert r2.json()["email"] == "api@example.com"  # nosec B101

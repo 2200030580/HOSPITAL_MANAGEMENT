@@ -13,9 +13,9 @@ def test_patient_service_create_get():
 
     payload = PatientCreate(name="Test User", email="test@example.com", phone="123456")
     created = create_patient(db, payload)
-    assert created.email == "test@example.com"
+    assert created.email == "test@example.com"  # nosec B101
 
     fetched = get_patient(db, created.id)
-    assert fetched is not None
-    assert fetched.id == created.id
+    assert fetched is not None  # nosec B101
+    assert fetched.id == created.id  # nosec B101
     db.close()
