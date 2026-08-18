@@ -60,7 +60,7 @@ def prepare_database():
         print(f"Failed to cleanup test resources: {e}")
 
 
-def pytest_sessionfinish(_session, _exitstatus):
+def pytest_sessionfinish(session, exitstatus):
     try:
         engine.dispose()
     except RuntimeError as e:
