@@ -1,11 +1,9 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from app.database import Base
-from app.services.appointment_service import create_appointment, get_appointment
-from app.schemas.appointment import AppointmentCreate
-from app.models.patient import Patient
-from app.models.doctor import Doctor
 from datetime import datetime
+
+from app.models.doctor import Doctor
+from app.models.patient import Patient
+from app.schemas.appointment import AppointmentCreate
+from app.services.appointment_service import create_appointment, get_appointment
 
 
 def test_create_and_get_appointment(db_session):

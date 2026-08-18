@@ -22,3 +22,9 @@ show_missing = true
 
 [tool.coverage.html]
 directory = "htmlcov"
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+ignore = ["B008"]

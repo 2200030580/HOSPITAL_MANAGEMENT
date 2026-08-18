@@ -1,9 +1,10 @@
-from app.database import engine, Base
-from app import models
+from app.database import Base, engine
+
 
 def main():
     Base.metadata.create_all(bind=engine)
-    print('Tables created')
+    print("Tables created")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.schemas.doctor import DoctorCreate, DoctorRead
-from app.services.doctor_service import create_doctor, get_doctors, get_doctor
+
 from app.database import get_db
+from app.schemas.doctor import DoctorCreate, DoctorRead
+from app.services.doctor_service import create_doctor, get_doctor, get_doctors
 
 router = APIRouter()
 
@@ -23,5 +24,3 @@ def read(doctor_id: int, db: Session = Depends(get_db)):
     if not doc:
         raise HTTPException(status_code=404, detail="Doctor not found")
     return doc
-
-

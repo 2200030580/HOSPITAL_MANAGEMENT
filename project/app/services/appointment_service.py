@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+
 from app.models.appointment import Appointment
 from app.schemas.appointment import AppointmentCreate
 
@@ -19,8 +20,9 @@ def create_appointment(db: Session, appt: AppointmentCreate):
         .first()
     )
     if overlapping:
-        raise ValueError("appointment time overlaps an existing appointment for this doctor")
-
+        raise ValueError(
+            "appointment time overlaps an existing appointment for this doctor"
+        )
     db_appt = Appointment(**appt.model_dump())
     db.add(db_appt)
     db.commit()

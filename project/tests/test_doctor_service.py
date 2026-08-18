@@ -1,5 +1,5 @@
-from app.services.doctor_service import create_doctor, get_doctor, get_doctors
 from app.schemas.doctor import DoctorCreate
+from app.services.doctor_service import create_doctor, get_doctor, get_doctors
 
 
 def test_doctor_service_create_get(db_session):

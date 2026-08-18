@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app.schemas.patient import PatientCreate, PatientRead
-from app.services.patient_service import create_patient, get_patients, get_patient
+
 from app.database import get_db
+from app.schemas.patient import PatientCreate, PatientRead
+from app.services.patient_service import create_patient, get_patient, get_patients
 
 router = APIRouter()
 
@@ -23,5 +24,3 @@ def read(patient_id: int, db: Session = Depends(get_db)):
     if not pat:
         raise HTTPException(status_code=404, detail="Patient not found")
     return pat
-
-

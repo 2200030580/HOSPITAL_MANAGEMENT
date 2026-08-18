@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
+
 from app.database import Base
 
 
@@ -10,4 +11,6 @@ class Patient(Base):
     email = Column(String, unique=True, index=True, nullable=False)
     phone = Column(String, nullable=True)
 
-    appointments = relationship("Appointment", back_populates="patient", cascade="all, delete-orphan")
+    appointments = relationship(
+        "Appointment", back_populates="patient", cascade="all, delete-orphan"
+    )

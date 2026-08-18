@@ -1,14 +1,14 @@
-from pydantic import BaseModel, model_validator, ConfigDict
 from datetime import datetime
-from typing import Optional
+
+from pydantic import BaseModel, ConfigDict, model_validator
 
 
 class AppointmentBase(BaseModel):
     patient_id: int
     doctor_id: int
     appointment_start: datetime
-    appointment_end: Optional[datetime] = None
-    reason: Optional[str] = None
+    appointment_end: datetime | None = None
+    reason: str | None = None
 
     @model_validator(mode="after")
     def check_times(self):

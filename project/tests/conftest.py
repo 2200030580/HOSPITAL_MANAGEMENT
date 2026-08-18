@@ -10,8 +10,7 @@ from sqlalchemy.pool import StaticPool
 from app.database import Base, get_db
 from app.main import create_app
 
-
-# shared in-memory engine for all tests
+# Shared in-memory engine for all tests
 engine = create_engine(
     "sqlite:///:memory:",
     connect_args={"check_same_thread": False},
@@ -27,10 +26,13 @@ TestingSessionLocal = sessionmaker(
 
 @pytest.fixture(scope="session", autouse=True)
 def prepare_database():
-    # import models so they register with Base
-    import app.models.patient  # noqa: F401
-    import app.models.doctor  # noqa: F401
-    import app.models.appointment  # noqa: F401
+    # Import models so they register with SQLAlchemy metadata
+    from app.models.appointment import Appointment
+    from app.models.doctor import Doctor
+    from app.models.patient import Patient
+
+    # Prevent Ruff from flagging imports as unused
+    _ = (Appointment, Doctor, Patient)
 
     Base.metadata.create_all(bind=engine)
 
@@ -38,33 +40,30 @@ def prepare_database():
 
     Base.metadata.drop_all(bind=engine)
 
-    # dispose test engine
     try:
         engine.dispose()
-    except Exception as e:
+    except RuntimeError as e:
         print(f"Failed to dispose test engine: {e}")
 
-    # also dispose the app database engine if it was created during tests
     try:
         dbmod = importlib.import_module("app.database")
 
         if hasattr(dbmod, "engine"):
             try:
                 dbmod.engine.dispose()
-            except Exception as e:
+            except (RuntimeError, AttributeError) as e:
                 print(f"Failed to dispose app database engine: {e}")
 
         gc.collect()
 
-    except Exception as e:
+    except (ImportError, RuntimeError, AttributeError) as e:
         print(f"Failed to cleanup test resources: {e}")
 
 
-def pytest_sessionfinish(session, exitstatus):
-    # final cleanup: ensure engines disposed and garbage collected
+def pytest_sessionfinish(_session, _exitstatus):
     try:
         engine.dispose()
-    except Exception as e:
+    except RuntimeError as e:
         print(f"Failed to dispose test engine: {e}")
 
     try:
@@ -73,12 +72,12 @@ def pytest_sessionfinish(session, exitstatus):
         if hasattr(dbmod, "engine"):
             try:
                 dbmod.engine.dispose()
-            except Exception as e:
+            except (RuntimeError, AttributeError) as e:
                 print(f"Failed to dispose app database engine: {e}")
 
         gc.collect()
 
-    except Exception as e:
+    except (ImportError, RuntimeError, AttributeError) as e:
         print(f"Failed to cleanup test resources: {e}")
 
 
@@ -88,7 +87,6 @@ def db_session():
 
     try:
         yield db
-
     finally:
         db.close()
 
@@ -102,7 +100,6 @@ def client():
 
         try:
             yield db
-
         finally:
             db.close()
 

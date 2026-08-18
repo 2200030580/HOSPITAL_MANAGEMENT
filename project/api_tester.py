@@ -8,6 +8,7 @@ Usage:
 Optional:
     python api_tester.py http://127.0.0.1:8000 --timeout 5
 """
+
 from __future__ import annotations
 
 import argparse
@@ -33,12 +34,12 @@ def get_id(data):
         for key in ("patient", "doctor", "appointment", "data"):
             if isinstance(data.get(key), dict) and "id" in data[key]:
                 return data[key]["id"]
-    raise AssertionError(f"Could not find an id in response: {data!r}")
+    raise TypeError(f"Could not find an id in response: {data!r}")
 
 
 def expect(response, allowed=(200, 201), label="request"):
     if response.status_code not in allowed:
-        raise AssertionError(
+        raise TypeError(
             f"{label}: HTTP {response.status_code}; response={response.text[:500]}"
         )
     return response
@@ -53,7 +54,11 @@ def main() -> int:
     session = requests.Session()
     tag = uuid.uuid4().hex[:8]
 
-    patient = {"name": f"Test Patient {tag}", "email": f"test-{tag}@example.com", "phone": "9999999999"}
+    patient = {
+        "name": f"Test Patient {tag}",
+        "email": f"test-{tag}@example.com",
+        "phone": "9999999999",
+    }
     doctor = {"name": f"Test Doctor {tag}", "specialization": "General Medicine"}
 
     start = datetime.now(timezone.utc).replace(microsecond=0) + timedelta(days=1)
@@ -70,7 +75,7 @@ def main() -> int:
         ok("GET /patients")
         patient_list = r.json()
         if not isinstance(patient_list, list):
-            raise AssertionError("GET /patients should return a JSON list")
+            raise TypeError("GET /patients should return a JSON list")
 
         r = session.post(f"{base}/patients", json=patient, timeout=args.timeout)
         expect(r, (200, 201), "POST /patients")
@@ -122,11 +127,9 @@ def main() -> int:
             "appointment_start": overlap_start.isoformat(),
             "appointment_end": overlap_end.isoformat(),
         }
-        r = session.post(
-            f"{base}/appointments", json=overlapping, timeout=args.timeout
-        )
+        r = session.post(f"{base}/appointments", json=overlapping, timeout=args.timeout)
         if r.status_code < 400:
-            raise AssertionError(
+            raise TypeError(
                 "Overlapping appointment was accepted; expected a 4xx response"
             )
         ok("Overlapping appointment is rejected")
