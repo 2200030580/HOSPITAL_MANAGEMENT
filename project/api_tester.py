@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 """
 smoke/integration tester for the Hospital Appointment API.
 
